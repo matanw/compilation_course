@@ -1,6 +1,7 @@
 %{
+int lineCounter=1;
+int startLine();
 %}
-
 
 %%
 [0-9][0-9]+	 {printf("%s", yytext);}
@@ -13,18 +14,26 @@
 7 {printf("VII");}
 8 {printf("VIII");}
 9 {printf("IX");}
+\n {lineCounter++; printf("\n"); startLine();}
 .	 {printf("%s", yytext);}
 %%
 
 int yywrap(){}
 int main(int argc, char *argv[]){
+if (argc>1){
 FILE *fp;
-// todo handle also standard
 fp = fopen(argv[1],"r");
 yyin = fp;
-
+startLine();
 yylex();
-
+}
 return 0;
 }
-
+int startLine(){
+	if(lineCounter%2==1){
+	   printf("%d.\t", lineCounter);
+	} else {
+	  printf("\t");
+	}
+	return 0;
+}

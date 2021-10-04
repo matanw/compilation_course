@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 12
-#define YY_END_OF_BUFFER 13
+#define YY_NUM_RULES 13
+#define YY_END_OF_BUFFER 14
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,7 +362,7 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[18] =
     {   0,
-        0,    0,   13,   11,   12,   11,    2,    3,    4,    5,
+        0,    0,   14,   12,   11,   12,    2,    3,    4,    5,
         6,    7,    8,    9,   10,    1,    0
     } ;
 
@@ -446,8 +446,10 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "source.lex"
 #line 2 "source.lex"
-#line 450 "lex.yy.c"
-#line 451 "lex.yy.c"
+int lineCounter=1;
+int startLine();
+#line 452 "lex.yy.c"
+#line 453 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -664,9 +666,9 @@ YY_DECL
 		}
 
 	{
-#line 5 "source.lex"
+#line 6 "source.lex"
 
-#line 670 "lex.yy.c"
+#line 672 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -725,65 +727,71 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 6 "source.lex"
+#line 7 "source.lex"
 {printf("%s", yytext);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 7 "source.lex"
+#line 8 "source.lex"
 {printf("I");}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 8 "source.lex"
+#line 9 "source.lex"
 {printf("II");}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 9 "source.lex"
+#line 10 "source.lex"
 {printf("III");}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 10 "source.lex"
+#line 11 "source.lex"
 {printf("IV");}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 11 "source.lex"
+#line 12 "source.lex"
 {printf("V");}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 12 "source.lex"
+#line 13 "source.lex"
 {printf("VI");}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 13 "source.lex"
+#line 14 "source.lex"
 {printf("VII");}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 14 "source.lex"
+#line 15 "source.lex"
 {printf("VIII");}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 15 "source.lex"
+#line 16 "source.lex"
 {printf("IX");}
 	YY_BREAK
 case 11:
+/* rule 11 can match eol */
 YY_RULE_SETUP
-#line 16 "source.lex"
-{printf("%s", yytext);}
+#line 17 "source.lex"
+{lineCounter++; printf("\n"); startLine();}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 17 "source.lex"
+#line 18 "source.lex"
+{printf("%s", yytext);}
+	YY_BREAK
+case 13:
+YY_RULE_SETUP
+#line 19 "source.lex"
 ECHO;
 	YY_BREAK
-#line 787 "lex.yy.c"
+#line 795 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1788,19 +1796,26 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 17 "source.lex"
+#line 19 "source.lex"
 
 
 int yywrap(){}
 int main(int argc, char *argv[]){
+if (argc>1){
 FILE *fp;
-// todo handle also standard
 fp = fopen(argv[1],"r");
 yyin = fp;
-
+startLine();
 yylex();
-
+}
 return 0;
 }
-
+int startLine(){
+	if(lineCounter%2==1){
+	   printf("%d.\t", lineCounter);
+	} else {
+	  printf("\t");
+	}
+	return 0;
+}
 
