@@ -666,7 +666,7 @@ YY_DECL
 		}
 
 	{
-#line 6 "source.lex"
+#line 5 "source.lex"
 
 #line 672 "lex.yy.c"
 
@@ -727,68 +727,68 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 7 "source.lex"
+#line 6 "source.lex"
 {printf("%s", yytext);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 8 "source.lex"
+#line 7 "source.lex"
 {printf("I");}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 9 "source.lex"
+#line 8 "source.lex"
 {printf("II");}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 10 "source.lex"
+#line 9 "source.lex"
 {printf("III");}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 11 "source.lex"
+#line 10 "source.lex"
 {printf("IV");}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 12 "source.lex"
+#line 11 "source.lex"
 {printf("V");}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 13 "source.lex"
+#line 12 "source.lex"
 {printf("VI");}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 14 "source.lex"
+#line 13 "source.lex"
 {printf("VII");}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 15 "source.lex"
+#line 14 "source.lex"
 {printf("VIII");}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 16 "source.lex"
+#line 15 "source.lex"
 {printf("IX");}
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 17 "source.lex"
+#line 16 "source.lex"
 {lineCounter++; printf("\n"); startLine();}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 18 "source.lex"
+#line 17 "source.lex"
 {printf("%s", yytext);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 19 "source.lex"
+#line 18 "source.lex"
 ECHO;
 	YY_BREAK
 #line 795 "lex.yy.c"
@@ -1796,26 +1796,29 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 19 "source.lex"
+#line 18 "source.lex"
 
+int yywrap() { }
 
-int yywrap(){}
 int main(int argc, char *argv[]){
-if (argc>1){
-FILE *fp;
-fp = fopen(argv[1],"r");
-yyin = fp;
-startLine();
-yylex();
-}
-return 0;
-}
-int startLine(){
-	if(lineCounter%2==1){
-	   printf("%d.\t", lineCounter);
-	} else {
-	  printf("\t");
-	}
+	if (argc != 2){
+       printf("Exactly one  arguent  excepted");
+       return 1;
+    }
+	FILE *fp;
+	fp = fopen(argv[1],"r");
+	yyin = fp;
+	startLine();
+	yylex();
 	return 0;
+}
+
+int startLine(){
+        if(lineCounter%2==1){
+           printf("%d.\t", lineCounter);
+        } else {
+          printf("\t");
+        }
+        return 0;
 }
 

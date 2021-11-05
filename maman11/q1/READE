@@ -1,0 +1,7 @@
+To build, run;
+flex source.le
+gcc lex.yy.c -o replace_nums
+
+To run:
+ ./replace_nums <input_file>
+
