@@ -1,0 +1,11 @@
+Error  in line  1:  Illegal  character &
+Error  in line  2:  Illegal  character &
+TOKEN	LEXEME	ATTRIBUTE
+SERIAL_NUMBER	[2]	number=2
+TIME_FIELD_NAME	<time>	
+TIME_VALUE	9.69	value=9.69
+ATHLETE_FIELD_NAME	<athlete>	
+SERIAL_NUMBER	[2]	number=2
+TIME_FIELD_NAME	<time>	
+TIME_VALUE	9.69	value=9.69
+ATHLETE_FIELD_NAME	<athlete>	

@@ -7,8 +7,7 @@ class AtleteLexer(Lexer):
     tokens = {TITLE, SERIAL_NUMBER,SPACE,TIME_FIELD_NAME,TIME_VALUE,
               ATHLETE_FIELD_NAME,STRING_LITERAL,COUNTRY_FIELD_NAME, 
               DATE_FIELD_NAME, DATE_VALUE}
-    ignore = '\n'
-    # Regular expression rules for tokens
+              
     TITLE = r'World Record'
     SERIAL_NUMBER = r'\[\d\]'
     SPACE = r' '
@@ -20,6 +19,14 @@ class AtleteLexer(Lexer):
     DATE_FIELD_NAME = r'\<date\>'
     DATE_VALUE= r'\d\d? (January|February|March|April|May|June|July|August|September|October|November|December) \d\d\d\d'
 
+    def error(self, t):
+        self.index += 1
+        return t
+
+    @_(r'\n+')
+    def ignore_newline(self, t):
+        self.lineno += t.value.count('\n')
+
 class  ProcessedToken:
     def __init__(self, token_type, lexeme, attributes):
         self.token_type =  token_type
@@ -28,7 +35,7 @@ class  ProcessedToken:
 
 def get_text():
     if len(sys.argv) != 2:
-        raise Execption('need exactly  one argument')
+        raise Exception('need exactly  one argument')
     file_path = sys.argv[1] #todo: handle error
     with open(file_path, 'r') as file:
         return file.read()
@@ -36,8 +43,13 @@ def get_text():
 def get_sly_tokens(text):
     return list(AtleteLexer().tokenize(text))
 
-def filter_out_space(sly_tokens):
-    return [t for t in sly_tokens if t.type  != 'SPACE']
+def filter_out_non_tokens(sly_tokens):
+    return [t for t in sly_tokens if t.type  not in ['SPACE','ERROR']]
+
+def  print_errors(sly_tokens):
+    for token in sly_tokens:
+        if token.type == 'ERROR':
+            print(f"Error  in line  {token.lineno}:  Illegal  character {token.value[0]}")
 
 def get_attributes(sly_token):
     if sly_token.type == 'SERIAL_NUMBER':
@@ -79,7 +91,8 @@ def print_processed_tokens(processed_tokens):
 def main():
     text = get_text()
     sly_tokens = get_sly_tokens(text)
-    sly_tokens = filter_out_space(sly_tokens)
+    print_errors(sly_tokens)
+    sly_tokens = filter_out_non_tokens(sly_tokens)
     processed_tokens = get_processed_tokens(sly_tokens)
     print_processed_tokens(processed_tokens)
 
