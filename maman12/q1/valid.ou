@@ -1,0 +1,14 @@
+break case default else float if input int output switch while
+( ) { }
+, : ; = 
+ ==  !=  <  >  >=  <=
+ + | -
+* | /
+ ||
+ &&
+ !
+static_cast<int> static_cast<float>
+001 004 var var1 CAPITALVAR  3.45 5.67
+/* coment*./
+if5 ifelse
+
