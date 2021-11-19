@@ -50,8 +50,6 @@ class LexerHelper(sly.Lexer):
     ID['switch'] = SWITCH
     ID['while'] = WHILE
 
-    ignore_comment = r'\#.*'
-
     # Line number tracking
     @_(r'\n+')
     def ignore_newline(self, t):
@@ -163,3 +161,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
