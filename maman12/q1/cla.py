@@ -13,14 +13,13 @@ def print_to_stderr(*args, **kwargs):
 class LexerHelper(sly.Lexer):
     """This is an extention to sly.Lexer to parse  the CPL  langunage
     This class *do not*  implement the interfacce in question"""
-    # Set of token names.   This is always required
-    tokens = { COMMMENT_START, COMMMENT_END,NUMBER, ID, BREAK, CASE, DEFAULT, ELSE, FLOAT,
+    tokens = { COMMMENT_START, COMMMENT_END,NUM, ID, 
+               BREAK, CASE, DEFAULT, ELSE, FLOAT,
                IF, INPUT, INT, OUTPUT, SWITCH, WHILE,
-               PLUS, MINUS, TIMES, DIVIDE, ASSIGN,
-               EQ, LT, LE, GT, GE, NE ,AND, OR,NOT, CAST}
+               RELOP,ADDOP,MULOP,OR,AND,NOT, CAST}
 
 
-    literals = { '(', ')', '{','}', ',', ':', ';'}
+    literals = { '(', ')', '{','}', ',', ':', ';', '='}
 
     # String containing ignored characters
     ignore = ' \t'
@@ -28,26 +27,17 @@ class LexerHelper(sly.Lexer):
     # Regular expression rules for tokens
     COMMMENT_START = r'/\*'
     COMMMENT_END = r'\*/'
-    PLUS    = r'\+'
-    MINUS   = r'-'
-    TIMES   = r'\*'
-    DIVIDE  = r'/'
-    EQ      = r'=='
-    ASSIGN  = r'='
-    LE      = r'<='
-    LT      = r'<'
-    GE      = r'>='
-    GT      = r'>'
-    NE      = r'!='
-    AND      = r'&&'
-    OR      = r'\|\|'
-    NOT =   r'!'
+    RELOP = r'==|!=|<=|>=|>|<'
+    ADDOP=r'\+|-'
+    MULOP=r'\*|/'
+    OR=r'\|\|'
+    AND= r'&&'
+    NOT =r'!'
+    CAST=r'static_cast\<int\>|static_cast\<float\>'
 
-    NUMBER = r'\d+(\.\d*)?'
-    CAST = r'(static_cast\<int\>|static_cast\<float\>)'
-
-    # Identifiers and keywords
+    NUM = r'\d+(\.\d*)?'
     ID = r'[A-Za-z]([A-Za-z0-9])*'
+
     ID['break'] = BREAK
     ID['case'] = CASE
     ID['default'] = DEFAULT
@@ -74,6 +64,18 @@ class LexerHelper(sly.Lexer):
 
 
 def get_attributes(sly_token):
+    if sly_token.type == 'CAST':
+        target = 'int' if sly_token.value == 'static_cast<int>' else 'float'
+        return {'target': target}
+    if sly_token.type == 'ID':
+        return {'id': sly_token.value}
+    if sly_token.type == 'NUM':
+        if '.' in sly_token.value:
+            return {'value': float(sly_token.value), 'type': 'float'}
+        else:
+            return {'value': int(sly_token.value), 'type': 'int'}
+    if sly_token.type in ['RELOP','ADDOP','MULOP']:
+        return { 'op': sly_token.value}
     return {}
 
 class  ProcessedToken:

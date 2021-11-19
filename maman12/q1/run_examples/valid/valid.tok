@@ -1,0 +1,45 @@
+TOKEN	LEXEME	ATTRIBUTE
+BREAK	break	
+CASE	case	
+DEFAULT	default	
+ELSE	else	
+FLOAT	float	
+IF	if	
+INPUT	input	
+INT	int	
+OUTPUT	output	
+SWITCH	switch	
+WHILE	while	
+(	(	
+)	)	
+{	{	
+}	}	
+,	,	
+:	:	
+;	;	
+=	=	
+RELOP	==	op===
+RELOP	!=	op=!=
+RELOP	<	op=<
+RELOP	>	op=>
+RELOP	>=	op=>=
+RELOP	<=	op=<=
+ADDOP	+	op=+
+ADDOP	-	op=-
+MULOP	*	op=*
+MULOP	/	op=/
+OR	||	
+AND	&&	
+NOT	!	
+CAST	static_cast<int>	target=int
+CAST	static_cast<float>	target=float
+NUM	001	value=1,type=int
+NUM	004	value=4,type=int
+ID	var	id=var
+ID	var1	id=var1
+ID	CAPITALVAR	id=CAPITALVAR
+NUM	3.45	value=3.45,type=float
+NUM	5.67	value=5.67,type=float
+ID	if5	id=if5
+ID	ifelse	id=ifelse
+Student Name: Matan Wiesner
