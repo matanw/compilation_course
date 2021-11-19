@@ -40,11 +40,6 @@ ID	var1
 ID	CAPITALVAR	
 NUMBER	3.45	
 NUMBER	5.67	
-DIVIDE	/	
-TIMES	*	
-ID	coment	
-TIMES	*	
-DIVIDE	/	
 ID	if5	
 ID	ifelse	
 Student Name: Matan Wiesner

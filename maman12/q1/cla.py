@@ -6,7 +6,7 @@ import os
 SIGNATURE = "Student Name: Matan Wiesner"
 
 
-def eprint(*args, **kwargs):
+def print_to_stderr(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
@@ -14,7 +14,7 @@ class LexerHelper(sly.Lexer):
     """This is an extention to sly.Lexer to parse  the CPL  langunage
     This class *do not*  implement the interfacce in question"""
     # Set of token names.   This is always required
-    tokens = { NUMBER, ID, BREAK, CASE, DEFAULT, ELSE, FLOAT,
+    tokens = { COMMMENT_START, COMMMENT_END,NUMBER, ID, BREAK, CASE, DEFAULT, ELSE, FLOAT,
                IF, INPUT, INT, OUTPUT, SWITCH, WHILE,
                PLUS, MINUS, TIMES, DIVIDE, ASSIGN,
                EQ, LT, LE, GT, GE, NE ,AND, OR,NOT, CAST}
@@ -26,6 +26,8 @@ class LexerHelper(sly.Lexer):
     ignore = ' \t'
 
     # Regular expression rules for tokens
+    COMMMENT_START = r'/\*'
+    COMMMENT_END = r'\*/'
     PLUS    = r'\+'
     MINUS   = r'-'
     TIMES   = r'\*'
@@ -66,8 +68,9 @@ class LexerHelper(sly.Lexer):
         self.lineno += t.value.count('\n')
 
     def error(self, t):
-        eprint('Line %d: Bad character %r' % (self.lineno, t.value[0]))
+        t.value = t.value[0]
         self.index += 1
+        return t
 
 
 def get_attributes(sly_token):
@@ -82,18 +85,46 @@ class  ProcessedToken:
 class Lexer():
     """ This class is the classs that implement the interface that required in question"""
 
-    def __init__(self, text):
+    def __init__(self, text, error_logger):
         self.tokens_generator = LexerHelper().tokenize(text)
+        self.error_logger = error_logger
+
+
+    def _get_next_sly_token(self):
+        try:
+            return next(self.tokens_generator)
+        except StopIteration:
+            return None
 
     def get_next_token(self):
         """This funcction return next valid token, or None in case of  end of output"""
-        try:
-            sly_token=next(self.tokens_generator)
-        except StopIteration:
-            return None
-        return ProcessedToken(sly_token.type, sly_token.value, get_attributes(sly_token)) 
+        in_comment = False
+        line_comment_start =None
+        while True:
+            sly_token = self._get_next_sly_token()
+            if in_comment:
+                if sly_token is None:
+                    self.error_logger.log_error(f"Opened comment in line {line_comment_start} and didn't close")
+                    return None
+                elif sly_token.type == 'COMMMENT_END':
+                    in_comment = False
+            else:
+                if sly_token is None:
+                    return None
+                elif sly_token.type == 'ERROR':
+                    self.error_logger.log_error(f"Bad character in line {sly_token.lineno}: '{sly_token.value}'")
+                elif sly_token.type == 'COMMMENT_START':
+                    in_comment = True
+                    line_comment_start = sly_token.lineno
+                elif sly_token.type == 'COMMMENT_END':
+                    self.error_logger.log_error(f"Error in line {sly_token.lineno}: close comment without open it")
+                else:
+                    return ProcessedToken(sly_token.type, sly_token.value, get_attributes(sly_token)) 
 
 
+class ErrorLogger():
+    def log_error(self, message):
+        print_to_stderr(message)
 
 def get_input_file_path():
     if len(sys.argv) != 2:
@@ -122,10 +153,10 @@ def write_output_file(out_file_path, lexer):
 def main():
     input_file_path = get_input_file_path()
     text = get_text(input_file_path)
-    lexer = Lexer(text)
+    lexer = Lexer(text, ErrorLogger())
     out_file_path = get_out_file_path(input_file_path)
     write_output_file(out_file_path, lexer)
-    eprint(SIGNATURE)
+    print_to_stderr(SIGNATURE)
 
 
 if __name__ == '__main__':
