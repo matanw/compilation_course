@@ -1,0 +1,13 @@
+TOKEN	LEXEME	ATTRIBUTE
+NUM	5	value=5,type=int
+IF	if	
+NUM	8	value=8,type=int
+ELSE	else	
+NUM	5.6	value=5.6,type=float
+NUM	7	value=7,type=int
+ID	var1	id=var1
+NUM	2.3	value=2.3,type=float
+ID	var	id=var
+ID	underscore	id=underscore
+ID	var5	id=var5
+Student Name: Matan Wiesner

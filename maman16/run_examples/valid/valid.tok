@@ -1,0 +1,175 @@
+TOKEN	LEXEME	ATTRIBUTE
+ID	TOKEN	id=TOKEN
+ID	LEXEME	id=LEXEME
+ID	ATTRIBUTE	id=ATTRIBUTE
+ID	BREAK	id=BREAK
+BREAK	break	
+ID	CASE	id=CASE
+CASE	case	
+ID	DEFAULT	id=DEFAULT
+DEFAULT	default	
+ID	ELSE	id=ELSE
+ELSE	else	
+ID	FLOAT	id=FLOAT
+FLOAT	float	
+ID	IF	id=IF
+IF	if	
+ID	INPUT	id=INPUT
+INPUT	input	
+ID	INT	id=INT
+INT	int	
+ID	OUTPUT	id=OUTPUT
+OUTPUT	output	
+ID	SWITCH	id=SWITCH
+SWITCH	switch	
+ID	WHILE	id=WHILE
+WHILE	while	
+(	(	
+(	(	
+)	)	
+)	)	
+{	{	
+{	{	
+}	}	
+}	}	
+,	,	
+,	,	
+:	:	
+:	:	
+;	;	
+;	;	
+=	=	
+=	=	
+ID	RELOP	id=RELOP
+RELOP	==	op===
+ID	op	id=op
+RELOP	==	op===
+=	=	
+ID	RELOP	id=RELOP
+RELOP	!=	op=!=
+ID	op	id=op
+=	=	
+RELOP	!=	op=!=
+ID	RELOP	id=RELOP
+RELOP	<	op=<
+ID	op	id=op
+=	=	
+RELOP	<	op=<
+ID	RELOP	id=RELOP
+RELOP	>	op=>
+ID	op	id=op
+=	=	
+RELOP	>	op=>
+ID	RELOP	id=RELOP
+RELOP	>=	op=>=
+ID	op	id=op
+=	=	
+RELOP	>=	op=>=
+ID	RELOP	id=RELOP
+RELOP	<=	op=<=
+ID	op	id=op
+=	=	
+RELOP	<=	op=<=
+ID	ADDOP	id=ADDOP
+ADDOP	+	op=+
+ID	op	id=op
+=	=	
+ADDOP	+	op=+
+ID	ADDOP	id=ADDOP
+ADDOP	-	op=-
+ID	op	id=op
+=	=	
+ADDOP	-	op=-
+ID	MULOP	id=MULOP
+MULOP	*	op=*
+ID	op	id=op
+=	=	
+MULOP	*	op=*
+ID	MULOP	id=MULOP
+MULOP	/	op=/
+ID	op	id=op
+=	=	
+MULOP	/	op=/
+ID	OR	id=OR
+OR	||	
+ID	AND	id=AND
+AND	&&	
+ID	NOT	id=NOT
+NOT	!	
+ID	CAST	id=CAST
+CAST	static_cast<int>	target=int
+ID	target	id=target
+=	=	
+INT	int	
+ID	CAST	id=CAST
+CAST	static_cast<float>	target=float
+ID	target	id=target
+=	=	
+FLOAT	float	
+ID	NUM	id=NUM
+NUM	001	value=1,type=int
+ID	value	id=value
+=	=	
+NUM	1	value=1,type=int
+,	,	
+ID	type	id=type
+=	=	
+INT	int	
+ID	NUM	id=NUM
+NUM	004	value=4,type=int
+ID	value	id=value
+=	=	
+NUM	4	value=4,type=int
+,	,	
+ID	type	id=type
+=	=	
+INT	int	
+ID	ID	id=ID
+ID	var	id=var
+ID	id	id=id
+=	=	
+ID	var	id=var
+ID	ID	id=ID
+ID	var1	id=var1
+ID	id	id=id
+=	=	
+ID	var1	id=var1
+ID	ID	id=ID
+ID	CAPITALVAR	id=CAPITALVAR
+ID	id	id=id
+=	=	
+ID	CAPITALVAR	id=CAPITALVAR
+ID	NUM	id=NUM
+NUM	3.45	value=3.45,type=float
+ID	value	id=value
+=	=	
+NUM	3.45	value=3.45,type=float
+,	,	
+ID	type	id=type
+=	=	
+FLOAT	float	
+ID	NUM	id=NUM
+NUM	5.67	value=5.67,type=float
+ID	value	id=value
+=	=	
+NUM	5.67	value=5.67,type=float
+,	,	
+ID	type	id=type
+=	=	
+FLOAT	float	
+ID	ID	id=ID
+ID	if5	id=if5
+ID	id	id=id
+=	=	
+ID	if5	id=if5
+ID	ID	id=ID
+ID	ifelse	id=ifelse
+ID	id	id=id
+=	=	
+ID	ifelse	id=ifelse
+ID	Student	id=Student
+ID	Name	id=Name
+:	:	
+ID	Matan	id=Matan
+ID	Wiesner	id=Wiesner
+Student Name: Matan Wiesner
