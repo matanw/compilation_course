@@ -1,22 +1,26 @@
-import lexer
+import lexer, errror_logger
 
 import sly
 class Parser(sly.Parser):
   # Get the token list from the lexer (required)
-  tokens = lexer.LexerHelper.tokens
+  tokens = lexer.Lexer.tokens
+  @_('')
+  def stmts(self, p):
+    return []
 
-  # Grammar rules and actions
+  @_('stmts ";" expr')
+  def stmts(self, p):
+    return p.stmts + [p.expr]
+
   @_('ID "=" ID')
   def expr(self, p):
-    print(p.ID0)
     return (p.ID0, p.ID1)
 
 if __name__ == '__main__':
 
-  text = 'aaa = /****456****/ & bbb'
-  lexer = lexer.Lexer(text, lexer.ErrorLogger())
+  text = ';aaa = ddd ; fff=5 ; fff=h '
   parser = Parser()
-  result = parser.parse(lexer.get_generator())
+  result = parser.parse(lexer.get_filtered_tokrens(text, error_logger=errror_logger.ErrorLogger()))
   print(result)
 
 
