@@ -150,13 +150,21 @@ def write_output_file(out_file_path, lexer):
 
 
 
-def main():
+def main1():
     input_file_path = get_input_file_path()
     text = get_text(input_file_path)
     lexer = Lexer(text, ErrorLogger())
     out_file_path = get_out_file_path(input_file_path)
     write_output_file(out_file_path, lexer)
     print_to_stderr(SIGNATURE)
+
+def main():
+    lexer = Lexer("3 if 5-7", ErrorLogger())
+    token = lexer.get_next_token()
+    while token:
+        attributes_str = ','.join([f"{k}={v}" for k, v  in token.attributes.items()])
+        print(f"{token.token_type}\t{token.lexeme}\t{attributes_str}\n")
+        token = lexer.get_next_token()
 
 
 if __name__ == '__main__':
