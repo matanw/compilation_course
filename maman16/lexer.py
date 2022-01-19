@@ -67,6 +67,12 @@ def get_attributes(sly_token):
         return { 'op': sly_token.value}
     return {}
 
+def get_token_set():
+    result = Lexer.tokens.copy()
+    result.remove('COMMMENT_START')
+    result.remove('COMMMENT_END')
+    return result
+
 def get_filtered_tokrens(text, error_logger):
   in_comment = False
   line_comment_start =None

@@ -1,0 +1,42 @@
+program -> declarations stmt_block 1
+declarations -> declarations declaration| epsilon 1
+declaration -> idlist ':' type ';'1
+type -> INT
+ | FLOAT1
+idlist -> idlist ',' ID
+ | ID1
+stmt -> assignment_stmt
+| input_stmt
+| output_stmt
+| if_stmt
+| while_stmt
+| switch_stmt
+| break_stmt
+| stmt_block1
+assignment_stmt -> ID '=' expression ';'1
+input_stmt -> INPUT '(' ID ')' ';'1
+output_stmt -> OUTPUT '(' expression ')' ';'1
+if_stmt -> IF ')' boolexpr '(' stmt ELSE stmt1
+while_stmt -> WHILE ')' boolexpr '(' stmt1
+switch_stmt -> SWITCH '(' expression ')' '{' caselist
+ DEFAULT ':' stmtlist '}'1
+caselist -> caselist CASE NUM ':' stmtlist
+ | epsilon1
+break_stmt -> BREAK ';'1
+stmt_block -> '{' stmtlist '}'1
+stmtlist -> stmtlist stmt
+ | epsilon1
+boolexpr -> boolexpr OR boolterm
+ | boolterm1
+boolterm -> boolterm AND boolfactor
+ | boolfactor1
+boolfactor -> NOT '(' boolexpr ')'
+| expression RELOP expression1
+expression -> expression ADDOP term
+| term1
+term -> term MULOP factor
+ | factor1
+factor -> '(' expression ')'
+ | CAST '(' expression ')'
+ | ID
+ | NUM1
