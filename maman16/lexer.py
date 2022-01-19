@@ -13,7 +13,7 @@ def print_to_stderr(*args, **kwargs):
 class LexerHelper(sly.Lexer):
     """This is an extention to sly.Lexer to parse  the CPL  langunage
     This class *do not*  implement the interfacce in question"""
-    tokens = { COMMMENT_START, COMMMENT_END,NUM, ID, 
+    tokens = { COMMMENT_START, COMMMENT_END,NUM, ID,
                BREAK, CASE, DEFAULT, ELSE, FLOAT,
                IF, INPUT, INT, OUTPUT, SWITCH, WHILE,
                RELOP,ADDOP,MULOP,OR,AND,NOT, CAST}
@@ -119,7 +119,32 @@ class Lexer():
                 elif sly_token.type == 'COMMMENT_END':
                     self.error_logger.log_error(f"Error in line {sly_token.lineno}: close comment without open it")
                 else:
-                    return ProcessedToken(sly_token.type, sly_token.value, get_attributes(sly_token)) 
+                    return ProcessedToken(sly_token.type, sly_token.value, get_attributes(sly_token))
+
+    def get_generator(self):
+        in_comment = False
+        line_comment_start =None
+        while True:
+            sly_token = self._get_next_sly_token()
+            if in_comment:
+                if sly_token is None:
+                    self.error_logger.log_error(f"Opened comment in line {line_comment_start} and didn't close")
+                    return
+                elif sly_token.type == 'COMMMENT_END':
+                    in_comment = False
+            else:
+                if sly_token is None:
+                    return
+                elif sly_token.type == 'ERROR':
+                    self.error_logger.log_error(f"Bad character in line {sly_token.lineno}: '{sly_token.value}'")
+                elif sly_token.type == 'COMMMENT_START':
+                    in_comment = True
+                    line_comment_start = sly_token.lineno
+                elif sly_token.type == 'COMMMENT_END':
+                    self.error_logger.log_error(f"Error in line {sly_token.lineno}: close comment without open it")
+                else:
+                    yield sly_token
+
 
 
 class ErrorLogger():
@@ -158,7 +183,7 @@ def main1():
     write_output_file(out_file_path, lexer)
     print_to_stderr(SIGNATURE)
 
-def main():
+def main2():
     lexer = Lexer("3 if 5-7", ErrorLogger())
     token = lexer.get_next_token()
     while token:
@@ -167,6 +192,9 @@ def main():
         token = lexer.get_next_token()
 
 
+def main():
+    for token in LexerHelper().tokenize("3 if 5-7/*ccc*/ 45"):
+        print(token)
 if __name__ == '__main__':
     main()
 

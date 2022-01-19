@@ -8,12 +8,15 @@ class Parser(sly.Parser):
   # Grammar rules and actions
   @_('ID "=" ID')
   def expr(self, p):
+    print(p.ID0)
     return (p.ID0, p.ID1)
 
-
 if __name__ == '__main__':
-  lexer = lexer.LexerHelper()
+
+  text = 'aaa = /****456****/ & bbb'
+  lexer = lexer.Lexer(text, lexer.ErrorLogger())
   parser = Parser()
-  text = 'aaa = bbb'
-  result = parser.parse(lexer.tokenize(text))
+  result = parser.parse(lexer.get_generator())
   print(result)
+
+
