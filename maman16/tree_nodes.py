@@ -1,11 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
-from enum import Enum
-
-class VarType(Enum):
-  INT = 'INT'
-  FLOAT = 'FLOAT'
+import enums
 
 @dataclass
 class Program():
@@ -15,7 +11,7 @@ class Program():
 @dataclass
 class Declaration():
   ids: List[str]
-  var_type: VarType
+  var_type: enums.VarType
 
 @dataclass
 class Stmt():
@@ -47,7 +43,7 @@ class WhileStmt(Stmt):
 
 @dataclass
 class CaseOption():
-  val:  int #todo: represent num
+  val:  str
   stmts: List[Stmt]
 
 @dataclass
@@ -70,13 +66,13 @@ class BooleanExpression():
 class SimpleBooleanExpression(BooleanExpression):
   expression1: Expression
   expression2: Expression
-  op: str #todo: ennu
+  op: enums.ComparisionOperation
 
 @dataclass
 class BinaryOperationBooleanExpretion(BooleanExpression):
   boolean_expression1: BooleanExpression
   boolean_expression2: BooleanExpression
-  op: str #todo: ennu
+  op: enums.BooleanBinaryOp
 
 @dataclass
 class NotOperationBooleanExpretion(BooleanExpression):
@@ -90,7 +86,7 @@ class Expression():
 class BinaryOperationExpression(Expression):
   expression1: Expression
   expression2: Expression
-  op: str #todo: ennu
+  op: enums.BinaryOp
 
 @dataclass
 class VarExpression(Expression):
@@ -98,11 +94,11 @@ class VarExpression(Expression):
 
 @dataclass
 class NumExpression(Expression):
-  num: str #todo
+  num: str
 
 @dataclass
 class CastExpression(Expression):
-  target: str #todo
+  target: enums.VarType
   expression: Expression
 
 

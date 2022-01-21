@@ -1,5 +1,5 @@
 import sly 
-
+import enums
 
 class Lexer(sly.Lexer):
     """This is an extention to sly.Lexer to parse  the CPL  langunage
@@ -18,28 +18,8 @@ class Lexer(sly.Lexer):
     # Regular expression rules for tokens
     COMMMENT_START = r'/\*'
     COMMMENT_END = r'\*/'
-    RELOP = r'==|!=|<=|>=|>|<'
-    ADDOP=r'\+|-'
-    MULOP=r'\*|/'
-    OR=r'\|\|'
-    AND= r'&&'
-    NOT =r'!'
-    CAST=r'static_cast\<int\>|static_cast\<float\>'
 
-    NUM = r'\d+(\.\d*)?'
-    ID = r'[A-Za-z]([A-Za-z0-9])*'
 
-    ID['break'] = BREAK
-    ID['case'] = CASE
-    ID['default'] = DEFAULT
-    ID['else'] = ELSE
-    ID['float'] = FLOAT
-    ID['if'] = IF
-    ID['input'] = INPUT
-    ID['int'] = INT
-    ID['output'] = OUTPUT
-    ID['switch'] = SWITCH
-    ID['while'] = WHILE
 
     # Line number tracking
     @_(r'\n+')
@@ -51,8 +31,72 @@ class Lexer(sly.Lexer):
         self.index += 1
         return t
 
+    @_(r'static_cast\<int\>|static_cast\<float\>')
+    def CAST(self, t):
+        t.value = enums.VarType.INT  if t.value == 'static_cast<int>' else enums.VarType.FLOAT
+        return t
 
-def get_attributes(sly_token):
+    @_(r'&&')
+    def AND(self, t):
+        t.value = enums.BooleanBinaryOp.AND
+        return t
+
+    @_(r'\|\|')
+    def OR(self, t):
+        t.value = enums.BooleanBinaryOp.OR
+        return t
+
+    @_(r'\+|-')
+    def ADDOP(self, t):
+        t.value = enums.BinaryOp.ADD if t.value == '*' else enums.BinaryOp.SUB
+        return t
+
+    @_(r'\*|/')
+    def MULOP(self, t):
+        t.value = enums.BinaryOp.MUL if t.value == '*' else enums.BinaryOp.DIV
+        return t
+
+    @_(r'==|!=|<=|>=|>|<')
+    def RELOP(self, t):
+        chars_to_op = {
+            '==' : enums.ComparisionOperation.EQUAL,
+            '!=' : enums.ComparisionOperation.NOT_EQUAL,
+            '<=' : enums.ComparisionOperation.SMALLAR_EQUAL,
+            '>=' : enums.ComparisionOperation.BIGGER_EQUAL,
+            '<' : enums.ComparisionOperation.SMALLER,
+            '>' : enums.ComparisionOperation.BIGGER,
+        }
+        t.value = chars_to_op[t.value]
+        return t
+
+    @_(r'int')
+    def INT(self, t):
+        t.value = enums.VarType.INT
+        return t
+
+    @_(r'float')
+    def FLOAT(self, t):
+        t.value = enums.VarType.FLOAT
+        return t
+
+        NUM = r'\d+(\.\d*)?'
+    ID = r'[A-Za-z]([A-Za-z0-9])*'
+    NOT =r'!'
+    ID['break'] = BREAK
+    ID['case'] = CASE
+    ID['default'] = DEFAULT
+    ID['else'] = ELSE
+    #ID['float'] = FLOAT
+    ID['if'] = IF
+    ID['input'] = INPUT
+    #ID['int'] = INT
+    ID['output'] = OUTPUT
+    ID['switch'] = SWITCH
+    ID['while'] = WHILE
+
+
+
+def get_attributes(sly_token):#todo delete
     if sly_token.type == 'CAST':
         target = 'int' if sly_token.value == 'static_cast<int>' else 'float'
         return {'target': target}

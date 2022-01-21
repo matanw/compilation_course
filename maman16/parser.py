@@ -23,11 +23,11 @@ class Parser(sly.Parser):
 
   @_('INT')
   def type(self, p):
-    return tree_nodes.VarType.INT
+    return p
 
   @_('FLOAT')
   def type(self, p):
-    return tree_nodes.VarType.FLOAT
+    return p
 
   @_('idlist "," ID')
   def idlist(self, p):
