@@ -86,10 +86,8 @@ class Lexer(sly.Lexer):
     ID['case'] = CASE
     ID['default'] = DEFAULT
     ID['else'] = ELSE
-    #ID['float'] = FLOAT
     ID['if'] = IF
     ID['input'] = INPUT
-    #ID['int'] = INT
     ID['output'] = OUTPUT
     ID['switch'] = SWITCH
     ID['while'] = WHILE
