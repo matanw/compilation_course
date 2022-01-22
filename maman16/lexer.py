@@ -61,10 +61,10 @@ class Lexer(sly.Lexer):
         chars_to_op = {
             '==' : enums.ComparisionOperation.EQUAL,
             '!=' : enums.ComparisionOperation.NOT_EQUAL,
-            '<=' : enums.ComparisionOperation.SMALLAR_EQUAL,
-            '>=' : enums.ComparisionOperation.BIGGER_EQUAL,
-            '<' : enums.ComparisionOperation.SMALLER,
-            '>' : enums.ComparisionOperation.BIGGER,
+            '<=' : enums.ComparisionOperation.LESS_EQUAL,
+            '>=' : enums.ComparisionOperation.GREAT_EQUAL,
+            '<' : enums.ComparisionOperation.LESS,
+            '>' : enums.ComparisionOperation.GREAT,
         }
         t.value = chars_to_op[t.value]
         return t

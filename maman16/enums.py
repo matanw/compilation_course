@@ -17,7 +17,7 @@ class BooleanBinaryOp(Enum):
 class ComparisionOperation(Enum):
   EQUAL = 'EQUAL'
   NOT_EQUAL = 'NOT_EQUAL'
-  SMALLAR_EQUAL = 'SMALLAR_EQUAL'
-  BIGGER_EQUAL = 'BIGGER_EQUAL'
-  SMALLER = 'SMALLER'
-  BIGGER = 'BIGGER'
+  LESS_EQUAL = 'LESS_EQUAL'
+  GREAT_EQUAL = 'GREAT_EQUAL'
+  LESS = 'LESS'
+  GREAT = 'GREAT'
