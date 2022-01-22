@@ -92,6 +92,9 @@ def get_jump_stmt(label: str) -> TargetStmt:
 def get_jump_if_zero_stmt(var: str, label: str) -> TargetStmt:
   return TargetStmt(f"JMPZ %s {var}", label_to_insert=label)
 
+def get_halt_stmt() -> TargetStmt:
+  return TargetStmt("HALT")
+
 
 def to_target_var_name(source_var_name: str) -> str:
   return f"source_{source_var_name}"
@@ -107,12 +110,36 @@ class TargetCodeProducer:
     self.label_generator = generator.Generator("L")
     self.var_generator = generator.Generator("t")
 
-  def go(self, program: tree_nodes.Program):
+  def get_code(self, program: tree_nodes.Program) -> str:
     self.handle_declerations(program.declarations)
-    target_stmts = self.handle_stmts(program.stmts, None)
-    for  target_stmt in target_stmts:
-      print(target_stmt)
-    #todo:halt + rempve nops
+    target_ops = self.handle_stmts(program.stmts, None)
+    target_ops.append(get_halt_stmt())
+    #todo if errors exit
+    target_stmts, label_dict = self.filter_out_labels(target_ops)
+    final_code = self.get_final_code(target_stmts, label_dict)
+    return final_code
+
+  def filter_out_labels(self, target_ops: List[TargetOp]
+  ) -> Tuple[List[TargetStmt], Dict[str, int]]:
+    target_stmts: List[TargetStmt] = []
+    label_dict: Dict[str,int] = {}
+    for i, op in enumerate(target_ops):
+      if isinstance(op, TargetStmt):
+        target_stmts.append(op)
+      else:
+        label_dict[op.label_name] = len(target_stmts) +1
+    return target_stmts, label_dict
+
+  def get_final_code(self,  target_stmts: List[TargetStmt],
+      label_dict: Dict[str,int]) -> str:
+    lines : List[str] = []
+    for stmt in target_stmts:
+      if stmt.label_to_insert is None:
+        lines.append(stmt.stmt)
+      else:
+        lines.append(stmt.stmt % label_dict[stmt.label_to_insert])
+    return "\n".join(lines)
+
 
   def handle_declerations(self, declerations: List[tree_nodes.Declaration]) ->  None:
     for decleration in declerations:

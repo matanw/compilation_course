@@ -7,5 +7,4 @@ if __name__ == '__main__':
   error_logger=errror_logger.ErrorLogger()
   parser = parser.Parser()#todo: pass error logger to parser
   result = parser.parse(lexer.get_filtered_tokrens(text, error_logger=error_logger))
-  print(result) # todo: delete
-  target_code_producer.TargetCodeProducer(error_logger=error_logger).go(result)
+  print(target_code_producer.TargetCodeProducer(error_logger=error_logger).get_code(result))
