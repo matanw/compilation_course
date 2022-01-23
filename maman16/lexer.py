@@ -79,7 +79,7 @@ class Lexer(sly.Lexer):
         t.value = enums.VarType.FLOAT
         return t
 
-        NUM = r'\d+(\.\d*)?'
+    NUM = r'\d+(\.\d*)?'
     ID = r'[A-Za-z]([A-Za-z0-9])*'
     NOT =r'!'
     ID['break'] = BREAK

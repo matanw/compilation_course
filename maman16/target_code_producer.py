@@ -171,7 +171,9 @@ class TargetCodeProducer:
                                                   enums.VarType.FLOAT))
         return result
       else:
-        pass #todo :error
+        print(var_type)
+        print(expr_result.result_type)
+        raise Exception("todo")#todo :error
     elif isinstance(stmt, tree_nodes.OutputStmt):
       expr_result = self.handle_expression(stmt.value)
       output_stmt = get_print_target_stmt(expr_result.result_var,

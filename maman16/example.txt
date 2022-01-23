@@ -1,11 +1,15 @@
 /* Finding minimum between two numbers */
-a, b: float;
-
+a, b: float; c: int;
 {
- input(a);
- input(b);
+ a=1;
+ b=2;
  if (a < b)
  output(a);
  else
  output(b);
+ c=5;
+ while(c>0){
+    output(c);
+    c =c-1;
+ }
 }

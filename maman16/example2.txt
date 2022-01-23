@@ -1,0 +1,7 @@
+/* Finding minimum between two numbers */
+a, b: float;
+
+{
+ a=11;
+ b=b+b;
+}
