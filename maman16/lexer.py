@@ -48,7 +48,7 @@ class Lexer(sly.Lexer):
 
     @_(r'\+|-')
     def ADDOP(self, t):
-        t.value = enums.BinaryOp.ADD if t.value == '*' else enums.BinaryOp.SUB
+        t.value = enums.BinaryOp.ADD if t.value == '+' else enums.BinaryOp.SUB
         return t
 
     @_(r'\*|/')
