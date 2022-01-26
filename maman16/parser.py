@@ -23,11 +23,11 @@ class Parser(sly.Parser):
 
   @_('INT')
   def type(self, p):
-    return p
+    return p.INT
 
   @_('FLOAT')
   def type(self, p):
-    return p
+    return p.FLOAT
 
   @_('idlist "," ID')
   def idlist(self, p):
