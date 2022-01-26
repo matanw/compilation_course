@@ -1,8 +1,0 @@
-RINP source_a
-RINP source_b
-RLSS t1 source_a source_b
-JMPZ 7 t1
-RPRT source_a
-JUMP 8
-RPRT source_b
-HALT

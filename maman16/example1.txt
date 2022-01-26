@@ -1,5 +1,0 @@
-/* Finding minimum between two numbers */
-a, b: float;
-{
- a = 1;
-}

@@ -1,0 +1,15 @@
+ITOR a 1
+ITOR b 2
+RLSS t1 source_a source_b
+JMPZ 7 t1
+RPRT source_a
+JUMP 8
+RPRT source_b
+IASN source_c 5
+IGRT t2 source_c 0
+JMPZ 15 t2
+IPRT source_c
+ISUB t3 source_c 1
+IASN source_c t3
+JUMP 9
+HALT
