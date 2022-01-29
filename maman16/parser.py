@@ -1,9 +1,14 @@
-import lexer, errror_logger,tree_nodes
+import lexer, program_errors,tree_nodes
 
 import sly
 
 class Parser(sly.Parser):
   tokens = lexer.get_token_set()
+
+  def __init__(self, error_manager: program_errors.ErrorsManager, files_lines: int):
+    super().__init__()
+    self.error_manager = error_manager
+    self.files_lines = files_lines
 
   @_('declarations stmt_block')
   def program(self, p):
@@ -205,6 +210,30 @@ class Parser(sly.Parser):
   @_('NUM')
   def factor(self, p):
     return tree_nodes.NumExpression(num=p.NUM)
+
+  def error(self, tok):
+    #todo: depper look on error handling
+    if tok is not None:
+      self.error_manager.add_parser_error(tok.lineno, f"Invalid token: {tok.type}")
+    else:
+      self.error_manager.add_parser_error(self.files_lines, "Files cannot ended here")
+    mode=1
+    if mode ==1:
+      try:
+        return next(self.tokens)
+      except StopIteration:
+        return None
+    if True:
+      self.errok()
+      return
+    while True:
+      tok = next(self.tokens, None)           # Get the next token
+      if not tok or tok.type == ';':
+        break
+      #self.errok()
+
+    # Return SEMI to the parser as the next lookahead token
+    return tok
 
 
 if __name__ == '__main__':

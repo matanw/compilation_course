@@ -1,5 +1,7 @@
 import sly 
 import enums
+import program_errors
+
 
 class Lexer(sly.Lexer):
     """This is an extention to sly.Lexer to parse  the CPL  langunage
@@ -93,29 +95,13 @@ class Lexer(sly.Lexer):
     ID['while'] = WHILE
 
 
-
-def get_attributes(sly_token):#todo delete
-    if sly_token.type == 'CAST':
-        target = 'int' if sly_token.value == 'static_cast<int>' else 'float'
-        return {'target': target}
-    if sly_token.type == 'ID':
-        return {'id': sly_token.value}
-    if sly_token.type == 'NUM':
-        if '.' in sly_token.value:
-            return {'value': float(sly_token.value), 'type': 'float'}
-        else:
-            return {'value': int(sly_token.value), 'type': 'int'}
-    if sly_token.type in ['RELOP','ADDOP','MULOP']:
-        return { 'op': sly_token.value}
-    return {}
-
 def get_token_set():
     result = Lexer.tokens.copy()
     result.remove('COMMMENT_START')
     result.remove('COMMMENT_END')
     return result
 
-def get_filtered_tokrens(text, error_logger):
+def get_filtered_tokrens(text, errors_manager: program_errors.ErrorsManager):
   in_comment = False
   line_comment_start =None
   for sly_token in Lexer().tokenize(text):
@@ -124,7 +110,7 @@ def get_filtered_tokrens(text, error_logger):
               in_comment = False
           continue
       if sly_token.type == 'ERROR':
-          error_logger.log_error(f"Bad character in line {sly_token.lineno}: '{sly_token.value}'")
+          errors_manager.add_lexer_error(sly_token.lineno, f"Bad character: '{sly_token.value}'")
       elif sly_token.type == 'COMMMENT_START':
           in_comment = True
           line_comment_start = sly_token.lineno
@@ -136,10 +122,10 @@ def get_filtered_tokrens(text, error_logger):
       error_logger.log_error(f"Opened comment in line {line_comment_start} and didn't close")
 
 
-def main():
-    import errror_logger
+def main():#todo delete
+    import program_errors
     logger  = errror_logger.ErrorLogger()
-    for token in get_filtered_tokrens("3 if 5-7/*ccc*/ 45",logger):
+    for token in get_filtered_tokrens("3 if; 5-7/*ccc*/ 45",logger):
         print(token)
 if __name__ == '__main__':
     main()

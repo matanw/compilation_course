@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional, Dict, List, Tuple
-import generator, tree_nodes, enums, errror_logger
+import generator, tree_nodes, enums, program_errors
 
 @dataclass
 class TargetOp:
@@ -104,8 +104,8 @@ def to_target_var_name(source_var_name: str) -> str:
 #todo: move aff all log_error, handle  line and return value
 class TargetCodeProducer:
 
-  def __init__(self, error_logger: errror_logger.ErrorLogger):
-    self.error_logger = error_logger
+  def __init__(self, error_managerr: program_errors.ErrorsManager):
+    self.error_managerr = error_managerr
     self.varname_to_type : Dict[str, enums.VarType] = dict()
     self.label_generator = generator.Generator("L")
     self.var_generator = generator.Generator("t")

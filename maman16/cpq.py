@@ -1,11 +1,15 @@
 
-import lexer, parser, target_code_producer, errror_logger, file_manager
+import lexer, parser, target_code_producer, program_errors, file_manager
 if __name__ == '__main__':
   text = file_manager.get_text()
-  error_logger= errror_logger.ErrorLogger()
-  lexer_result = lexer.get_filtered_tokrens(text, error_logger=error_logger)
-  parser_result = parser.Parser().parse(lexer_result)
+  errors_manager= program_errors.ErrorsManager()
+  lexer_result = lexer.get_filtered_tokrens(text, errors_manager)
+  files_lines = 1 + text.count('\n')
+  parser_result = parser.Parser(errors_manager, files_lines).parse(lexer_result)
   print(parser_result) #todo:delete
-  final_code =  target_code_producer.TargetCodeProducer(error_logger=error_logger).get_code(parser_result)
+  if errors_manager.has_errors():
+    errors_manager.log_errors()
+    exit() #todo: try  parse evven of errors
+  final_code =  target_code_producer.TargetCodeProducer(errors_manager).get_code(parser_result)
   #todo:  add signature
   file_manager.write_output_file(final_code)
