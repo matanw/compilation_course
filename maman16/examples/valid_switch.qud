@@ -1,0 +1,13 @@
+INQL t1 source_a 1
+JMPZ 8 t1
+INQL t1 source_a 2
+JMPZ 9 t1
+INQL t1 source_a 3
+JMPZ 11 t1
+JUMP 12
+IPRT 1
+IPRT 2
+JUMP 13
+IPRT 3
+IPRT 50
+HALT

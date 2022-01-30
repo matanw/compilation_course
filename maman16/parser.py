@@ -118,7 +118,7 @@ class Parser(sly.Parser):
 
   @_('BREAK ";"')
   def break_stmt(self, p):
-    return tree_nodes.BreakStmt()
+    return tree_nodes.BreakStmt(lineno=p.lineno)
 
   @_('"{" stmtlist "}"')
   def stmt_block(self, p):
@@ -205,7 +205,7 @@ class Parser(sly.Parser):
 
   @_('ID')
   def factor(self, p):
-    return tree_nodes.VarExpression(var_name=p.ID)
+    return tree_nodes.VarExpression(var_name=p.ID, lineno=p.lineno)
 
   @_('NUM')
   def factor(self, p):

@@ -16,10 +16,17 @@ a: int;
     output(c);
     c =c-1;
  }
- switch(a){
-    case 3.4:
-      output(b);
-    default: output(a)
-
+ switch (b){
+   case 1.7:
+      output(1);
+   case 2:
+      output(2);
+      break;
+   case 3:
+      output(3);
+   default:
+      output(50);
  }
+ break;
+ output(23*vvvv+bbb*d);
 }

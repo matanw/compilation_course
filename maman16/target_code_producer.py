@@ -225,17 +225,18 @@ class TargetCodeProducer:
                                     for _ in stmt.cases)
       cond_var = self.var_generator.get_next()
       exp_result = self.handle_expression(stmt.exp)
-      if exp_result.result_var == enums.VarType.FLOAT:
+      if exp_result.result_type == enums.VarType.FLOAT:
         self.error_manager.add_semantic_error(stmt.lineno, "switch exp cannot be float")
       result : List[TargetOp] = []
       result.extend(exp_result.stmts)
       for i, case in enumerate(stmt.cases):
         if get_num_type(case.val) == enums.VarType.FLOAT:
-          self.error_manager.add_semantic_error(case.lineno, "ccase nu cannot be float")
+          self.error_manager.add_semantic_error(case.lineno, "case num cannot be float")
         result.append(get_set_1_if_not_equals_target_stmt(exp_result.result_var,
                                                           case.val, cond_var,
                                                           enums.VarType.INT))
         result.append(get_jump_if_zero_stmt(cond_var, case_labels[i]))
+      result.append(get_jump_stmt(default_label))
       for i, case in enumerate(stmt.cases):
         case_stmts = self.handle_stmts(case.stmts, exit_label)
         result.append(TargetLabel(case_labels[i]))
@@ -246,7 +247,8 @@ class TargetCodeProducer:
       result.append(TargetLabel(exit_label))
       return result
     elif isinstance(stmt, tree_nodes.BreakStmt):
-      #todo: if label_for_break is None
+      if label_for_break == None:
+        self.error_manager.add_semantic_error(stmt.lineno, "break is  not suitable  in this  context")
       return [get_jump_stmt(label_for_break)]
     else:
       raise Exception(f"Internal error: unrecognized stmt type : {type(stmt)}")
@@ -331,6 +333,10 @@ class TargetCodeProducer:
     if isinstance(expression, tree_nodes.BinaryOperationExpression):
       expr1_result = self.handle_expression(expression.expression1)
       expr2_result = self.handle_expression(expression.expression2)
+      if  (expr1_result.result_type == enums.VarType.UNKNOWN or
+          expr2_result.result_type == enums.VarType.UNKNOWN):
+        return ExpressionResult(result_var="", result_type=enums.VarType.UNKNOWN,
+                                stmts=[])
       result_stmt : List[TargetOp] = []
       if expr1_result.result_type == expr2_result.result_type:
         var1 = expr1_result.result_var
@@ -362,9 +368,10 @@ class TargetCodeProducer:
       return ExpressionResult(result_var=result_var, result_type=vars_type,
                               stmts=result_stmt)
     elif isinstance(expression, tree_nodes.VarExpression):
-      #todo:if expression.var_name not in self.varname_to_type
+      if expression.var_name not in self.varname_to_type:
+        self.error_manager.add_semantic_error(expression.lineno, f"var {expression.var_name} is not declared")
       return ExpressionResult(result_var=to_target_var_name(expression.var_name),
-                              result_type=self.varname_to_type[expression.var_name],
+                              result_type=self.varname_to_type.get(expression.var_name, enums.VarType.UNKNOWN),
                               stmts=[])
     elif isinstance(expression, tree_nodes.NumExpression):
       return ExpressionResult(result_var=expression.num,

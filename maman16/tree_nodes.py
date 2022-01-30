@@ -68,7 +68,7 @@ class SwitchStmt(Stmt):
 
 @dataclass
 class BreakStmt(Stmt):
-  pass
+  lineno: int
 
 
 @dataclass
@@ -109,6 +109,7 @@ class BinaryOperationExpression(Expression):
 @dataclass
 class VarExpression(Expression):
   var_name: str
+  lineno: int
 
 
 @dataclass

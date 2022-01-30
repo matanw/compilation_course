@@ -1,0 +1,16 @@
+/* Finding minimum between two numbers */
+a, b: int;
+{
+ switch (a){
+   case 1:
+      output(1);
+   case 2:
+      output(2);
+      break;
+   case 3:
+      output(3);
+      break;
+   default:
+      output(50);
+ }
+}
