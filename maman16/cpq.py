@@ -10,6 +10,11 @@ if __name__ == '__main__':
   if errors_manager.has_errors():
     errors_manager.log_errors()
     exit() #todo: try  parse evven of errors
-  final_code =  target_code_producer.TargetCodeProducer(errors_manager).get_code(parser_result)
+  target_code_producer_ =  target_code_producer.TargetCodeProducer(errors_manager)
+  target_ops =  target_code_producer_.get_target_ops(parser_result)
+  if errors_manager.has_errors():
+    errors_manager.log_errors()
+    exit()
+  final_code = target_code_producer_.get_final_code(target_ops)
   #todo:  add signature
   file_manager.write_output_file(final_code)

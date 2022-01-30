@@ -1,0 +1,25 @@
+/* Finding minimum between two numbers */
+a, b: float; c: int;
+a: int;
+{
+ a=1;
+ b=2;
+ g3=6;
+ c=5.6;
+ input(ff);
+ if (a < b)
+ output(a);
+ else
+ output(b);
+ c=5;
+ while(c>0){
+    output(c);
+    c =c-1;
+ }
+ switch(a){
+    case 3.4:
+      output(b);
+    default: output(a)
+
+ }
+}

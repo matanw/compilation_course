@@ -14,6 +14,7 @@ class Program():
 class Declaration():
   ids: List[str]
   var_type: enums.VarType
+  lineno: int
 
 
 @dataclass
@@ -25,11 +26,13 @@ class Stmt():
 class AssigmentStmt(Stmt):
   var_name: str
   value: Expression
+  lineno: int
 
 
 @dataclass
 class InputStmt(Stmt):
   var_name: str
+  lineno: int
 
 @dataclass
 class OutputStmt(Stmt):
@@ -52,6 +55,7 @@ class WhileStmt(Stmt):
 class CaseOption:
   val: str
   stmts: List[Stmt]
+  lineno: int
 
 
 @dataclass
@@ -59,6 +63,7 @@ class SwitchStmt(Stmt):
   exp: Expression
   cases: List[CaseOption]
   default_stmts: List[Stmt]
+  lineno: int
 
 
 @dataclass

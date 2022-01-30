@@ -99,24 +99,26 @@ def get_halt_stmt() -> TargetStmt:
 def to_target_var_name(source_var_name: str) -> str:
   return f"source_{source_var_name}"
 
+def get_num_type(num: str) -> enums.VarType:
+  return enums.VarType.FLOAT if "." in num else enums.VarType.INT
 
-
-#todo: move aff all log_error, handle  line and return value
 class TargetCodeProducer:
 
-  def __init__(self, error_managerr: program_errors.ErrorsManager):
-    self.error_managerr = error_managerr
+  def __init__(self, error_manager: program_errors.ErrorsManager):
+    self.error_manager = error_manager
     self.varname_to_type : Dict[str, enums.VarType] = dict()
     self.label_generator = generator.Generator("L")
     self.var_generator = generator.Generator("t")
 
-  def get_code(self, program: tree_nodes.Program) -> str:
+  def get_target_ops(self, program: tree_nodes.Program) -> list[TargetOp]:
     self.handle_declerations(program.declarations)
     target_ops = self.handle_stmts(program.stmts, None)
     target_ops.append(get_halt_stmt())
-    #todo if errors exit
+    return target_ops
+
+  def get_final_code(self, target_ops: List[TargetOp]):
     target_stmts, label_dict = self.filter_out_labels(target_ops)
-    final_code = self.get_final_code(target_stmts, label_dict)
+    final_code = self._get_final_code(target_stmts, label_dict)
     return final_code
 
   def filter_out_labels(self, target_ops: List[TargetOp]
@@ -130,7 +132,7 @@ class TargetCodeProducer:
         label_dict[op.label_name] = len(target_stmts) +1
     return target_stmts, label_dict
 
-  def get_final_code(self,  target_stmts: List[TargetStmt],
+  def _get_final_code(self,  target_stmts: List[TargetStmt],
       label_dict: Dict[str,int]) -> str:
     lines : List[str] = []
     for stmt in target_stmts:
@@ -145,7 +147,9 @@ class TargetCodeProducer:
     for decleration in declerations:
       for id in decleration.ids:
         if id in self.varname_to_type:
-          self.error_logger.log_error(f"duplicate var{id}")
+          self.error_manager.add_semantic_error(decleration.lineno, f"duplicate var {id}")
+          if self.varname_to_type[id] != decleration.var_type:
+            self.varname_to_type[id] = enums.VarType.UNKNOWN
         self.varname_to_type[id] = decleration.var_type
 
   def handle_stmts(self, stmts: List[tree_nodes.Stmt],
@@ -160,7 +164,9 @@ class TargetCodeProducer:
     if isinstance(stmt, tree_nodes.AssigmentStmt):
       expr_result = self.handle_expression(stmt.value)
       result = list(expr_result.stmts)
-      # todo: ..if not stmt.var_name in self.varname_to_type
+      if not stmt.var_name in self.varname_to_type:
+        self.error_manager.add_semantic_error(stmt.lineno, f"var {stmt.var_name} is not defined")
+        return []
       var_type = self.varname_to_type[stmt.var_name]
       if var_type == expr_result.result_type:
         result.append(get_assigment_target_stmt(to_target_var_name(stmt.var_name), expr_result.result_var,
@@ -171,16 +177,17 @@ class TargetCodeProducer:
                                                   enums.VarType.FLOAT))
         return result
       else:
-        print(var_type)
-        print(expr_result.result_type)
-        raise Exception("todo")#todo :error
+        self.error_manager.add_semantic_error(stmt.lineno, "Cannot assign float to int")
+        return []
     elif isinstance(stmt, tree_nodes.OutputStmt):
       expr_result = self.handle_expression(stmt.value)
       output_stmt = get_print_target_stmt(expr_result.result_var,
                                           expr_result.result_type)
       return expr_result.stmts + [output_stmt]
     elif isinstance(stmt, tree_nodes.InputStmt):
-      #todo - not exists var
+      if not stmt.var_name in self.varname_to_type:
+        self.error_manager.add_semantic_error(stmt.lineno, f"var {stmt.var_name} is not defined")
+        return []
       return [get_read_target_stmt(to_target_var_name(stmt.var_name),
                                    self.varname_to_type[stmt.var_name])]
     elif isinstance(stmt, tree_nodes.IfStmt):
@@ -218,11 +225,13 @@ class TargetCodeProducer:
                                     for _ in stmt.cases)
       cond_var = self.var_generator.get_next()
       exp_result = self.handle_expression(stmt.exp)
-      #if exp_result.result_var == enums.VarType.FLOAT
+      if exp_result.result_var == enums.VarType.FLOAT:
+        self.error_manager.add_semantic_error(stmt.lineno, "switch exp cannot be float")
       result : List[TargetOp] = []
       result.extend(exp_result.stmts)
       for i, case in enumerate(stmt.cases):
-        #todo:  if get_num_type(case.val) == enums.VarType.FLOAT
+        if get_num_type(case.val) == enums.VarType.FLOAT:
+          self.error_manager.add_semantic_error(case.lineno, "ccase nu cannot be float")
         result.append(get_set_1_if_not_equals_target_stmt(exp_result.result_var,
                                                           case.val, cond_var,
                                                           enums.VarType.INT))
@@ -359,8 +368,7 @@ class TargetCodeProducer:
                               stmts=[])
     elif isinstance(expression, tree_nodes.NumExpression):
       return ExpressionResult(result_var=expression.num,
-                              result_type=enums.VarType.FLOAT if "." in expression.num
-                                           else enums.VarType.INT,
+                              result_type=get_num_type(expression.num),
                               stmts=[])
     elif isinstance(expression,tree_nodes.CastExpression):
       inner_result = self.handle_expression(expression.expression)

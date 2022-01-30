@@ -24,7 +24,7 @@ class Parser(sly.Parser):
 
   @_('idlist ":" type ";"')
   def declaration(self, p):
-    return tree_nodes.Declaration(ids=p.idlist,var_type=p.type)
+    return tree_nodes.Declaration(ids=p.idlist,var_type=p.type, lineno=p.lineno)
 
   @_('INT')
   def type(self, p):
@@ -76,11 +76,11 @@ class Parser(sly.Parser):
 
   @_('ID "=" expression ";"')
   def assignment_stmt(self, p):
-    return tree_nodes.AssigmentStmt(var_name=p.ID, value=p.expression)
+    return tree_nodes.AssigmentStmt(var_name=p.ID, value=p.expression, lineno=p.lineno)
 
   @_('INPUT "(" ID ")" ";"')
   def input_stmt(self, p):
-    return tree_nodes.InputStmt(var_name=p.ID)
+    return tree_nodes.InputStmt(var_name=p.ID, lineno=p.lineno)
 
   @_('OUTPUT "(" expression ")" ";"')
   def output_stmt(self, p):
@@ -105,11 +105,11 @@ class Parser(sly.Parser):
   def switch_stmt(self, p):
     return tree_nodes.SwitchStmt(exp=p.expression,
                                  cases=p.caselist,
-                                 default_stmts=p.stmtlist)
+                                 default_stmts=p.stmtlist, lineno=p.lineno)
 
   @_('caselist CASE NUM ":" stmtlist')
   def caselist(self, p):
-    case_option = tree_nodes.CaseOption(val=p.NUM, stmts=p.stmtslist)
+    case_option = tree_nodes.CaseOption(val=p.NUM, stmts=p.stmtlist, lineno=p.lineno)
     return p.caselist + [case_option]
 
   @_('')

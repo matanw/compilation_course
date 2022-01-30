@@ -3,6 +3,7 @@ from enum import Enum
 class VarType(Enum):
   INT = 'INT'
   FLOAT = 'FLOAT'
+  UNKNOWN = 'UNKNOWN' #used  in case of semantic error
 
 class BinaryOp(Enum):
   ADD = 'ADD'
