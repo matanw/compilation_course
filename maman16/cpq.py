@@ -1,7 +1,8 @@
 
 import lexer, parser, target_code_producer, program_errors, file_manager
 if __name__ == '__main__':
-  text = file_manager.get_text()
+  input_file_path = file_manager.get_and_validate_input_file_path()
+  text = file_manager.get_text(input_file_path)
   errors_manager= program_errors.ErrorsManager()
   lexer_result = lexer.get_filtered_tokrens(text, errors_manager)
   files_lines = 1 + text.count('\n')
@@ -17,4 +18,5 @@ if __name__ == '__main__':
     exit()
   final_code = target_code_producer_.get_final_code(target_ops)
   #todo:  add signature
-  file_manager.write_output_file(final_code)
+  out_file_path = file_manager.get_out_file_path(input_file_path)
+  file_manager.write_output_file(out_file_path,final_code)
