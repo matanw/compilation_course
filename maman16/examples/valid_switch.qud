@@ -4,10 +4,12 @@ INQL t1 source_a 2
 JMPZ 9 t1
 INQL t1 source_a 3
 JMPZ 11 t1
-JUMP 12
+JUMP 13
 IPRT 1
 IPRT 2
-JUMP 13
+JUMP 14
 IPRT 3
+JUMP 14
 IPRT 50
 HALT
+Student Name: Matan Wiesner

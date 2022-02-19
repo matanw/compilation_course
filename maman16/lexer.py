@@ -115,18 +115,8 @@ def get_filtered_tokrens(text, errors_manager: program_errors.ErrorsManager):
           in_comment = True
           line_comment_start = sly_token.lineno
       elif sly_token.type == 'COMMMENT_END':
-          error_logger.log_error(f"Error in line {sly_token.lineno}: close comment without open it")
+          errors_manager.add_lexer_error(sly_token.lineno,"close comment without open it")
       else:
           yield sly_token
   if in_comment:
-      error_logger.log_error(f"Opened comment in line {line_comment_start} and didn't close")
-
-
-def main():#todo delete
-    import program_errors
-    logger  = errror_logger.ErrorLogger()
-    for token in get_filtered_tokrens("3 if; 5-7/*ccc*/ 45",logger):
-        print(token)
-if __name__ == '__main__':
-    main()
-
+      errors_manager.add_lexer_error(line_comment_start,f"Open comment and isn't close")

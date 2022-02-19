@@ -1,8 +1,5 @@
-import sys
 from typing import List, Tuple
-
-def print_to_stderr(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
+from file_manager import print_to_stderr
 
 
 class ErrorsManager():

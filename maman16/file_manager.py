@@ -2,7 +2,6 @@
 import sys
 import os
 
-SIGNATURE = "Student Name: Matan Wiesner"
 INPUT_FILE_SUFFIX = ".ou"
 OUTPUT_FILE_SUFFIX = ".qud"
 
@@ -26,3 +25,7 @@ def get_out_file_path(input_file_path) -> str:
 def write_output_file(out_file_path: str, final_code: str):
     with open(out_file_path, 'w') as file:
         file.write(final_code)
+
+
+def print_to_stderr(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)

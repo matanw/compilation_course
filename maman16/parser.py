@@ -71,7 +71,7 @@ class Parser(sly.Parser):
     return [p.break_stmt]
 
   @_('stmt_block')
-  def stmt(self, p): #todo: explain in doc that stmt is a list
+  def stmt(self, p):
     return p.stmt_block
 
   @_('ID "=" expression ";"')
@@ -221,16 +221,3 @@ class Parser(sly.Parser):
       if not tok or tok.type == ';':
         self.errok()
         return tok
-
-
-if __name__ == '__main__':
-  import sys
-  file_name=sys.argv[1]
-  text = open(file_name).read()
-  parser = Parser()
-  result = parser.parse(lexer.get_filtered_tokens(text, error_logger=errror_logger.ErrorLogger()))
-  import pprint
-  p1=pprint.PrettyPrinter(indent=2)
-  p1.pprint(result)
-
-
