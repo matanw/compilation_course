@@ -212,28 +212,15 @@ class Parser(sly.Parser):
     return tree_nodes.NumExpression(num=p.NUM)
 
   def error(self, tok):
-    #todo: depper look on error handling
     if tok is not None:
       self.error_manager.add_parser_error(tok.lineno, f"Invalid token: {tok.type}")
     else:
       self.error_manager.add_parser_error(self.files_lines, "Files cannot ended here")
-    mode=1
-    if mode ==1:
-      try:
-        return next(self.tokens)
-      except StopIteration:
-        return None
-    if True:
-      self.errok()
-      return
     while True:
-      tok = next(self.tokens, None)           # Get the next token
+      tok = next(self.tokens, None)
       if not tok or tok.type == ';':
-        break
-      #self.errok()
-
-    # Return SEMI to the parser as the next lookahead token
-    return tok
+        self.errok()
+        return tok
 
 
 if __name__ == '__main__':
@@ -241,7 +228,7 @@ if __name__ == '__main__':
   file_name=sys.argv[1]
   text = open(file_name).read()
   parser = Parser()
-  result = parser.parse(lexer.get_filtered_tokrens(text, error_logger=errror_logger.ErrorLogger()))
+  result = parser.parse(lexer.get_filtered_tokens(text, error_logger=errror_logger.ErrorLogger()))
   import pprint
   p1=pprint.PrettyPrinter(indent=2)
   p1.pprint(result)
